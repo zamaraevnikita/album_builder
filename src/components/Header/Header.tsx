@@ -168,7 +168,7 @@ export const Header: React.FC<HeaderProps> = ({
           </option>
         ))}
       </select>
-      <div className="bg-linen p-1 rounded-lg hidden md:flex gap-1">
+      <div className="bg-linen p-1 rounded-lg flex gap-1">
         <button
           onClick={() => setViewMode('spread')}
           className={`px-3 lg:px-4 py-2 rounded-md text-[10px] lg:text-xs font-semibold transition-all duration-300 ${

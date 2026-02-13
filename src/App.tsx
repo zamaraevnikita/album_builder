@@ -62,6 +62,8 @@ const App: React.FC = () => {
   const [snapToGrid, setSnapToGrid] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [scale, setScale] = useState(1);
+  const [panX, setPanX] = useState(0);
+  const [panY, setPanY] = useState(0);
   const [leftPanelOpen, setLeftPanelOpen] = useState(true);
   const [rightPanelOpen, setRightPanelOpen] = useState(true);
   const [leftPanelWidth, setLeftPanelWidth] = useState(280);
@@ -107,7 +109,17 @@ const App: React.FC = () => {
       const scaleW = availableW / targetW;
       const scaleH = availableH / targetH;
       const autoScale = Math.min(scaleW, scaleH);
-      setScale(autoScale * zoomLevel);
+      const raw = autoScale * zoomLevel;
+      const newScale = Math.round(raw * 1000) / 1000;
+      if (!zoomFromWheelRef.current) {
+        const oldScale = scaleRef.current;
+        if (oldScale > 0 && oldScale !== newScale) {
+          setPanX(prev => prev * (newScale / oldScale));
+          setPanY(prev => prev * (newScale / oldScale));
+        }
+        setScale(newScale);
+      }
+      zoomFromWheelRef.current = false;
     };
     const observer = new ResizeObserver(() => {
       window.requestAnimationFrame(calculateScale);
@@ -117,14 +129,80 @@ const App: React.FC = () => {
     return () => observer.disconnect();
   }, [viewMode, leftPanelOpen, rightPanelOpen, zoomLevel, canvasSpreadWidth, canvasSingleWidth, canvasSpreadHeight]);
 
-  const handleWheel = useCallback((e: React.WheelEvent) => {
-    let delta = 0;
-    if (e.ctrlKey || e.metaKey) {
-      delta = -e.deltaY * 0.01;
-    } else {
-      delta = -e.deltaY * 0.002;
-    }
-    setZoomLevel(prev => Math.max(0.1, Math.min(5, prev + delta)));
+  const zoomDeltaRef = useRef(0);
+  const zoomRafRef = useRef<number | null>(null);
+  const lastWheelPointRef = useRef({ x: 0, y: 0 });
+  const zoomFromWheelRef = useRef(false);
+  const scaleRef = useRef(scale);
+  const zoomLevelRef = useRef(zoomLevel);
+  const panXRef = useRef(panX);
+  const panYRef = useRef(panY);
+  const canvasWidthRef = useRef(canvasSpreadWidth);
+  const canvasHeightRef = useRef(canvasSpreadHeight);
+  const canvasSpreadWidthRef = useRef(canvasSpreadWidth);
+  scaleRef.current = scale;
+  zoomLevelRef.current = zoomLevel;
+  panXRef.current = panX;
+  panYRef.current = panY;
+  canvasWidthRef.current = viewMode === 'spread' ? canvasSpreadWidth : canvasSingleWidth;
+  canvasHeightRef.current = canvasSpreadHeight;
+  canvasSpreadWidthRef.current = canvasSpreadWidth;
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        const rect = el.getBoundingClientRect();
+        const s = scaleRef.current;
+        const spreadW = canvasSpreadWidthRef.current;
+        const spreadH = canvasHeightRef.current;
+        const boxW = spreadW * s;
+        const boxH = spreadH * s;
+        const boxLeft = (rect.width - boxW) / 2;
+        const boxTop = (rect.height - boxH) / 2;
+        const mx = e.clientX - rect.left - boxLeft;
+        const my = e.clientY - rect.top - boxTop;
+        lastWheelPointRef.current = { x: mx, y: my };
+        zoomDeltaRef.current += -e.deltaY * 0.01;
+        if (zoomRafRef.current === null) {
+          zoomRafRef.current = requestAnimationFrame(() => {
+            zoomRafRef.current = null;
+            const d = zoomDeltaRef.current;
+            zoomDeltaRef.current = 0;
+            if (d === 0) return;
+            const prevZoom = zoomLevelRef.current;
+            const newZoom = Math.max(0.1, Math.min(5, prevZoom + d));
+            const sOld = scaleRef.current;
+            const sNew = Math.round(sOld * (newZoom / prevZoom) * 1000) / 1000;
+            const { x: mx_w, y: my_w } = lastWheelPointRef.current;
+            const tx = panXRef.current;
+            const ty = panYRef.current;
+            const panXNew = mx_w * (1 - sNew / sOld) + tx * (sNew / sOld);
+            const panYNew = my_w * (1 - sNew / sOld) + ty * (sNew / sOld);
+            zoomFromWheelRef.current = true;
+            setScale(sNew);
+            setZoomLevel(newZoom);
+            setPanX(panXNew);
+            setPanY(panYNew);
+          });
+        }
+      } else {
+        e.preventDefault();
+        setPanX(prev => prev - e.deltaX);
+        setPanY(prev => prev - e.deltaY);
+      }
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => {
+      el.removeEventListener('wheel', onWheel);
+      if (zoomRafRef.current !== null) cancelAnimationFrame(zoomRafRef.current);
+    };
+  }, []);
+
+  const handleWheel = useCallback((_e: React.WheelEvent) => {
+    // Pan (two fingers) and zoom (ctrl+wheel) are handled in the native wheel listener
   }, []);
 
   const handleSelect = useCallback(
@@ -677,6 +755,13 @@ const App: React.FC = () => {
           scale={scale}
           zoomLevel={zoomLevel}
           setZoomLevel={setZoomLevel}
+          panX={panX}
+          panY={panY}
+          onResetZoom={() => {
+            setZoomLevel(1);
+            setPanX(0);
+            setPanY(0);
+          }}
           showGrid={showGrid}
           setShowGrid={setShowGrid}
           snapToGrid={snapToGrid}
