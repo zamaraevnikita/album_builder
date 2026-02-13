@@ -5,69 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Linen & Monolith Studio</title>
     <meta name="description" content="Premium Editorial Design Tool" />
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-              mono: ['JetBrains Mono', 'monospace'],
-            },
-            colors: {
-              linen: '#f4f2ee',
-              monolith: {
-                black: '#121212',
-                dark: '#1e1e1e',
-                muted: '#999999',
-              },
-              accent: '#c5a368',
-            },
-            boxShadow: {
-              'soft': '0 10px 30px -10px rgba(0,0,0,0.1)',
-              'float': '0 20px 40px rgba(0,0,0,0.2)',
-            },
-            transitionTimingFunction: {
-              'fluid': 'cubic-bezier(0.23, 1, 0.32, 1)',
-            }
-          }
-        }
-      }
-    </script>
-    <style>
-      /* Custom scrollbar to match the minimal aesthetic */
-      ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-      }
-      ::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.1);
-        border-radius: 3px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: rgba(0, 0, 0, 0.2);
-      }
-    </style>
-  <script type="importmap">
-{
-  "imports": {
-    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "react/": "https://esm.sh/react@^19.2.4/",
-    "react": "https://esm.sh/react@^19.2.4"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
-</head>
-  <body class="bg-linen text-monolith-black overflow-hidden selection:bg-monolith-black selection:text-white">
+  </head>
+  <body class="bg-linen text-monolith-black overflow-hidden selection:bg-monolith-black selection:text-white font-sans">
     <div id="root"></div>
-  <script type="module" src="/src/index.tsx"></script>
-</body>
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
 </html>
