@@ -1,8 +1,17 @@
-import { CanvasElement, Page, TextTemplate } from './types';
+
+import { CanvasElement, Page, TextTemplate, AlbumFormat } from './types';
+
+export const GRID_SIZE = 5;
+
+export const ALBUM_FORMATS: AlbumFormat[] = [
+  { id: 'a4', name: '210×297 (A4)', width: 210, height: 297 },
+  { id: '200', name: '200×200', width: 200, height: 200 },
+  { id: '225', name: '225×270', width: 225, height: 270 },
+];
 
 export const INITIAL_PAGES: Page[] = [
-  { id: 'p1', name: 'Spread 01' },
-  { id: 'p2', name: 'Spread 02' },
+  { id: 'p1', name: 'Разворот 01' },
+  { id: 'p2', name: 'Разворот 02' },
 ];
 
 const DEFAULT_STYLE_PROPS = {
@@ -21,72 +30,7 @@ const DEFAULT_STYLE_PROPS = {
   imageY: 0,
 };
 
-export const INITIAL_ELEMENTS: CanvasElement[] = [
-  { 
-    id: 'l1', 
-    pageId: 'p1',
-    name: 'Hero_Visual_Left.jpg', 
-    type: 'image', 
-    x: 0, 
-    y: 0, 
-    width: 500, 
-    height: 420, 
-    ...DEFAULT_STYLE_PROPS,
-    content: 'https://images.unsplash.com/photo-1500673922987-e212871fec22?auto=format&fit=crop&q=80&w=1000'
-  },
-  { 
-    id: 'l2', 
-    pageId: 'p1',
-    name: 'Main_Heading_01', 
-    type: 'text', 
-    x: 48, 
-    y: 450, 
-    width: 400, 
-    height: 60, 
-    ...DEFAULT_STYLE_PROPS,
-    content: 'Quiet Solace',
-    fontSize: 32,
-    fontWeight: 300,
-    fontFamily: 'Inter',
-    color: '#121212',
-    letterSpacing: -0.05,
-    lineHeight: 1.2,
-    textAlign: 'left'
-  },
-  { 
-    id: 'l3', 
-    pageId: 'p1',
-    name: 'Sub_Heading', 
-    type: 'text', 
-    x: 48, 
-    y: 500, 
-    width: 400, 
-    height: 20, 
-    ...DEFAULT_STYLE_PROPS,
-    content: 'CHAPTER I — 45.4215° N, 75.6972° W',
-    fontSize: 10,
-    fontWeight: 400,
-    fontFamily: 'JetBrains Mono',
-    color: '#121212',
-    letterSpacing: 0.1,
-    lineHeight: 1.4,
-    textAlign: 'left',
-    opacity: 0.6
-  },
-  // Element on Page 2
-  { 
-    id: 'l4', 
-    pageId: 'p2',
-    name: 'Full_Spread_Img', 
-    type: 'image', 
-    x: 100, 
-    y: 100, 
-    width: 800, 
-    height: 400, 
-    ...DEFAULT_STYLE_PROPS,
-    content: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&q=80&w=1000'
-  },
-];
+export const INITIAL_ELEMENTS: CanvasElement[] = [];
 
 export const MOCK_ASSETS = [
   'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&q=80&w=400',
@@ -100,10 +44,10 @@ export const MOCK_ASSETS = [
 export const TEXT_TEMPLATES: TextTemplate[] = [
     {
         id: 'headline-1',
-        name: 'Serif Headline',
-        preview: 'Aa',
+        name: 'Заголовок (Serif)',
+        preview: 'Аа',
         elementData: {
-            content: 'Editorial Headline',
+            content: 'Редакционный Заголовок',
             fontSize: 42,
             fontFamily: 'Times New Roman',
             fontWeight: 400,
@@ -114,10 +58,10 @@ export const TEXT_TEMPLATES: TextTemplate[] = [
     },
     {
         id: 'subhead-mono',
-        name: 'Mono Label',
+        name: 'Подпись (Mono)',
         preview: '01',
         elementData: {
-            content: 'FIG. 01 — DETAILS',
+            content: 'РИС. 01 — ДЕТАЛИ',
             fontSize: 10,
             fontFamily: 'JetBrains Mono',
             fontWeight: 400,
@@ -130,10 +74,10 @@ export const TEXT_TEMPLATES: TextTemplate[] = [
     },
     {
         id: 'body-col',
-        name: 'Body Column',
+        name: 'Текстовая колонка',
         preview: '¶',
         elementData: {
-            content: 'Ideally, a designer should try to create a page where the text is easy to read and the images are easy to see.',
+            content: 'В идеале дизайнер должен стремиться создать страницу, где текст легко читается, а изображения легко воспринимаются, создавая гармонию между элементами.',
             fontSize: 12,
             fontFamily: 'Inter',
             fontWeight: 400,
@@ -145,10 +89,10 @@ export const TEXT_TEMPLATES: TextTemplate[] = [
     },
     {
         id: 'quote-italic',
-        name: 'Pull Quote',
-        preview: '“',
+        name: 'Цитата',
+        preview: '"',
         elementData: {
-            content: '“Design is intelligence made visible.”',
+            content: '"Дизайн — это интеллект, ставший видимым."',
             fontSize: 24,
             fontFamily: 'Inter',
             fontWeight: 300,

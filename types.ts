@@ -1,6 +1,18 @@
+
 export type ViewMode = 'spread' | 'single';
 
+export interface AlbumFormat {
+  id: string;
+  name: string;
+  width: number;
+  height: number;
+}
+
 export type ElementType = 'image' | 'text' | 'shape';
+
+export type ShapeKind = 'rectangle' | 'circle' | 'ellipse' | 'triangle';
+
+export type ToolType = 'move' | 'hand' | 'text' | 'shape';
 
 export interface Page {
   id: string;
@@ -28,7 +40,10 @@ export interface CanvasElement {
   // Style props
   opacity: number;
   backgroundColor?: string;
-  
+
+  // Shape variant (when type === 'shape')
+  shapeKind?: ShapeKind;
+
   // Borders & Corners
   borderRadius: number;
   borderWidth: number;
@@ -65,3 +80,7 @@ export interface TextTemplate {
     preview: string;
     elementData: Partial<CanvasElement>;
 }
+
+export type ResizeHandle = 'tl' | 'tr' | 'bl' | 'br';
+export type PageSide = 'left' | 'right';
+export type LeftPanelTab = 'layers' | 'assets' | 'templates';
