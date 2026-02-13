@@ -43,20 +43,6 @@ export const MOCK_ASSETS = [
 
 export const TEXT_TEMPLATES: TextTemplate[] = [
     {
-        id: 'headline-1',
-        name: 'Заголовок (Serif)',
-        preview: 'Аа',
-        elementData: {
-            content: 'Редакционный Заголовок',
-            fontSize: 42,
-            fontFamily: 'Times New Roman',
-            fontWeight: 400,
-            letterSpacing: -0.05,
-            width: 400,
-            height: 60
-        }
-    },
-    {
         id: 'subhead-mono',
         name: 'Подпись (Mono)',
         preview: '01',
@@ -70,36 +56,6 @@ export const TEXT_TEMPLATES: TextTemplate[] = [
             color: '#666666',
             width: 200,
             height: 20
-        }
-    },
-    {
-        id: 'body-col',
-        name: 'Текстовая колонка',
-        preview: '¶',
-        elementData: {
-            content: 'В идеале дизайнер должен стремиться создать страницу, где текст легко читается, а изображения легко воспринимаются, создавая гармонию между элементами.',
-            fontSize: 12,
-            fontFamily: 'Inter',
-            fontWeight: 400,
-            lineHeight: 1.6,
-            textAlign: 'justify',
-            width: 200,
-            height: 150
-        }
-    },
-    {
-        id: 'quote-italic',
-        name: 'Цитата',
-        preview: '"',
-        elementData: {
-            content: '"Дизайн — это интеллект, ставший видимым."',
-            fontSize: 24,
-            fontFamily: 'Inter',
-            fontWeight: 300,
-            italic: true,
-            textAlign: 'center',
-            width: 300,
-            height: 80
         }
     }
 ];
